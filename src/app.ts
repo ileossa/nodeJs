@@ -1,15 +1,17 @@
 import * as express from 'express'
 import * as bodyParser from 'body-parser'
+import * as mongoose from 'mongoose'
+import Controller from './interfaces/controller.interface'
 
-class App {
+
+export default class App {
     app: express.Application
-    port: number
 
-    constructor(controller, port) {
+    constructor(controllers: Controller[]) {
         this.app = express()
-        this.port = port
+        this.connectToMongoDB()
         this.initializeMiddlewares()
-        this.initializeControllers(controller)
+        this.initializeControllers(controllers)
     }
 
     private initializeMiddlewares() {
@@ -28,11 +30,20 @@ class App {
         next();
     }
 
+    private connectToMongoDB(){
+        const {
+            MONGO_USER,
+            MONGO_PASSWORD,
+            MONGO_PATH
+        } = process.env
+        var pathConnection = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`
+        console.log(pathConnection)
+        mongoose.connect(pathConnection, {useNewUrlParser: true, useUnifiedTopology: true});
+    }
+
     public listen(){
-        this.app.listen(this.port, () => {
-            console.log(`App listening on the port http://localhost:${this.port}`)
+        this.app.listen(process.env.PORT, () => {
+            console.log(`App listening on the port http://localhost:${process.env.PORT}`)
         })
     }
 }
-
-export default App
