@@ -2,9 +2,8 @@ import * as express from 'express'
 import * as bodyParser from 'body-parser'
 
 class App {
-    // TODO tester en enlevant les public devant
-    public app: express.Application
-    public port: number
+    app: express.Application
+    port: number
 
     constructor(controller, port) {
         this.app = express()
