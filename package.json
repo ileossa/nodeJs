@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node ./src/server.ts",
+    "mongo" : "MONGO_USER=ileossa MONGO_PASSWORD=DnAmQnNn6LXSjcM MONGO_PATH=@nodejs-tv0ci.gcp.mongodb.net/test?retryWrites=true&w=majority ts-node ./src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
