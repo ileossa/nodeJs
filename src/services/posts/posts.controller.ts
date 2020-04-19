@@ -3,6 +3,8 @@ import Post from './post.interface'
 import postModel from "./posts.model";
 import {NextFunction, request} from "express";
 import PostNotFoundException from "../../exceptions/PostNotFoundException";
+import {validationDTO} from "../../middleware/validationDTO";
+import {CreatePostDto} from "./posts.dto";
 
 export default class PostsController {
     public path = '/posts'
@@ -16,9 +18,9 @@ export default class PostsController {
     public initializaRoutes() {
         this.router.get(this.path, this.getAllPosts)
         this.router.get(`${this.path}/:id`, this.getPostById)
-        this.router.put(`${this.path}/:id`, this.modifyPost)
+        this.router.post(this.path, validationDTO(CreatePostDto), this.createAPost)
+        this.router.patch(`${this.path}/:id`, validationDTO(CreatePostDto), this.modifyPost)
         this.router.delete(`${this.path}/:id`, this.deletePost)
-        this.router.post(this.path, this.createAPost)
     }
 
     private getAllPosts = (req: express.Request, res: express.Response) => {

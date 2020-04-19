@@ -3,6 +3,7 @@ import * as bodyParser from 'body-parser'
 import * as mongoose from 'mongoose'
 import Controller from './interfaces/controller.interface'
 import errorMiddleware from './middleware/error.middleware'
+import {NextFunction} from "express";
 
 
 export default class App {
@@ -21,13 +22,13 @@ export default class App {
         this.app.use(errorMiddleware)
     }
 
-    private initializeControllers(controller){
+    private initializeControllers(controller: Controller[]){
         controller.forEach((controller) => {
             this.app.use('/',  controller.router)
         })
     }
 
-    private loggerMiddleware(request: express.Request, response: express.Response, next) {
+    private loggerMiddleware(request: express.Request, response: express.Response, next: NextFunction) {
         console.log(`${request.method} ${request.path}`);
         next();
     }
