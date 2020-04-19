@@ -2,7 +2,7 @@ import * as express from 'express'
 import Post from './post.interface'
 import postModel from "./posts.model";
 import {NextFunction, request} from "express";
-import HttpException from "../../exceptions/HttpException";
+import PostNotFoundException from "../../exceptions/PostNotFoundException";
 
 export default class PostsController {
     public path = '/posts'
@@ -32,16 +32,16 @@ export default class PostsController {
         const id = req.params.id
         this.model.findById(id)
             .then((postfind) => {
-                postfind ? res.send(postfind) : next(new HttpException(404, 'Data not found'))
+                postfind ? res.send(postfind) : next(new PostNotFoundException(id))
             })
     }
 
-    private modifyPost = (req: express.Request, res: express.Response) => {
+    private modifyPost = (req: express.Request, res: express.Response, next: NextFunction) => {
         const id = req.params.id
         const input = req.body
         this.model.findByIdAndUpdate(id, input, {new: true})
             .then((postUpdate) => {
-                res.send(postUpdate)
+                postUpdate ? res.send(postUpdate) : next(new PostNotFoundException(id))
             })
     }
 
@@ -54,11 +54,11 @@ export default class PostsController {
             })
     }
 
-    private deletePost = (req: express.Request, res: express.Response) => {
+    private deletePost = (req: express.Request, res: express.Response, next: NextFunction) => {
         const id = request.params.id
         this.model.findByIdAndDelete(id)
             .then((successPostCreated) => {
-                successPostCreated ? res.send(200) : res.send(500)
+                successPostCreated ? res.send(200) : next(new PostNotFoundException(id))
             })
     }
 
