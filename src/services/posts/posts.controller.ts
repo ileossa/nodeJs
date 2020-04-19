@@ -1,7 +1,7 @@
 import * as express from 'express'
 import Post from './post.interface'
 import postModel from "./posts.model";
-import {request} from "express";
+import {NextFunction, request} from "express";
 
 export default class PostsController {
     public path = '/posts'
@@ -27,11 +27,11 @@ export default class PostsController {
             })
     }
 
-    private getPostById = (req: express.Request, res: express.Response) => {
+    private getPostById = (req: express.Request, res: express.Response, next: NextFunction) => {
         const id = req.params.id
         this.model.findById(id)
             .then((postfind) => {
-                res.send(postfind)
+                postfind ? res.send(postfind) : next('Data not found')
             })
     }
 
