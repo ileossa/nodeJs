@@ -2,6 +2,7 @@ import * as express from 'express'
 import Post from './post.interface'
 import postModel from "./posts.model";
 import {NextFunction, request} from "express";
+import HttpException from "../../exceptions/HttpException";
 
 export default class PostsController {
     public path = '/posts'
@@ -31,7 +32,7 @@ export default class PostsController {
         const id = req.params.id
         this.model.findById(id)
             .then((postfind) => {
-                postfind ? res.send(postfind) : next('Data not found')
+                postfind ? res.send(postfind) : next(new HttpException(404, 'Data not found'))
             })
     }
 
